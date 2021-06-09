@@ -1,44 +1,65 @@
 class Oddssa():
-    def __init__(self,list):
+    def __init__(self,list,body):
+        self.banca = list['banca']
+        self.campeonato = list['campeonato']
+
+        self.tCasa = list['tCasa']
+        self.tFora = list['tFora']
+
         self.casa = list['casa']
-        self.fora = list['fora']
         self.empate = list['empate']
+        self.fora = list['fora']
+        self.body = body
+    
+    def setTCasa(self, value):
+        self.tCasa = value
+    def setTFora(self, value):
+        self.tFora = value
+    def setFora(self, value):
+        self.fora = value
+    def setEmpate(self, value):
+        self.empate = value
+    def setCasa(self, value):
+        self.casa = value
+    def setCampeonato(self, value):
+        self.campeonato = value
+
+
 class Link():
-    lengthList = 0
-    interator  = 0
-    link       = None
-    def __init__(self,list):        
+
+    """def __init__(self,list):        
+        self.setLinkList(list)
+        self.setLengthList()
+        self.setInterator()"""
+    def __init__(self,list):   
         self.setLinkList(list)
         self.setLengthList()
         self.setInterator()
 
     #link list
-    @staticmethod
-    def getLinkList():
-        print('setado')
-        return Link.link
+    def getLinkList(self):
+        print('setado',self.link)
+        return self.link
     def setLinkList(self,list):
-        Link.link = list
+        self.link = list
     
     #interator
-    @staticmethod
-    def getInterator():
-        return Link.interator
+    def getInterator(self):
+        return self.interator
 
-    @staticmethod
-    def incrementInterator():
-        return Link.interator+1
+    def incrementInterator(self):
+        self.interator =+ 1
+        return self.interator
 
     def setInterator(self):
-        Link.interator = 0
+        self.getInterator = 0
 
     #lengthlist
-    @staticmethod
-    def getLengthList():
-        return Link.lengthList
+    def getLengthList(self):
+        return self.lengthList
 
     def setLengthList(self):
-        Link.lengthList = len(self.link)
+        self.lengthList = len(self.link)
 
     
 
