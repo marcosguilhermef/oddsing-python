@@ -38,7 +38,7 @@ class RaparOddsSa():
         for odd in self.oddsSoap:
             td = odd.find_all('td')
             try:
-                parametrizar =  { "nome":td[0].get_text(),"Taxa":td[1].get_text(), "tipo": tipoDeOdd} 
+                parametrizar =  { "nome":td[0].get_text(),"Taxa": float(td[1].get_text().replace(',','.')) , "tipo": tipoDeOdd} 
                 self.oddsJSON['odds'].append(parametrizar)
             except IndexError:
                 if len(td) != 0:
@@ -123,4 +123,4 @@ class rasparDadosKbets():
         return { "casa": casaResult, "fora": foraResult }
 
     def setOdds(self):
-        self.oddsJSON['odds'] = list(map( lambda x : { "tipo": x["grupo"], "taxa": x["taxa"], "nome": x["odds"] } , self.body))
+        self.oddsJSON['odds'] = list(map( lambda x : { "tipo": x["grupo"], "Taxa": float(x["taxa"]), "nome": x["odds"] } , self.body))

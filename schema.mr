@@ -1,0 +1,32 @@
+db.odds.aggregate( 
+    [  
+        {
+             $match: {
+                ativo: { "$eq": true },
+                sitema: { "$eq": "sa sports" }
+                
+            }
+        },
+        {
+            $group : {
+                    _id:  { 
+                            tCasa: "$tCasa", 
+                            tFora : "$tFora"
+                    },
+                    tCasa: {
+                        $first: "$tCasa"
+                    },
+                    tFora: {
+                        $first: "$tFora"
+                    }
+            }
+        }
+
+    ] 
+)
+
+db.odds.find(
+    {
+        'odds.taxa' : {  $eq : '2,48'}
+    }
+)
