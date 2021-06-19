@@ -19,8 +19,9 @@ class Database():
         result = self.collection.insert_one(dados)
         print('carregado: '+str(result.inserted_id))
     def desativarAtivos(self,dados):
-        print('desativado')
-        self.collection.update_many({"ativo": True, "tCasa": dados['tCasa'], "tFora":dados['tFora'], 'sistema': dados['sistema']}, { "$set": {"ativo": False}})
+        print('desativas')
+        result = self.collection.update_many({"ativo": True, "tCasa": dados['tCasa'], "tFora":dados['tFora'], 'banca': dados['banca']}, { "$set": {"ativo": False}})
+        print(result.raw_result)
     def getAllTimes(self):
         aggregate = [{"$match": { "ativo": True,  "sistema": "sa sports" } },{"$group" : { "_id": { "tCasa": "$tCasa", "tFora" : "$tFora"}} }]
         result = Database.mongo["oddsing"]["odds"].aggregate(aggregate)
