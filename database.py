@@ -19,7 +19,7 @@ class Database():
         result = self.collection.insert_one(dados)
         print('carregado: '+str(result.inserted_id))
     def desativarAtivos(self,dados):
-        print('desativas')
+        print(dados['sistema'])
         if dados['sistema'] == "kbets":
             result = self.collection.update_many({"ativo": True, "tCasaOriginal": dados['tCasaOriginal'], "tForaHoriginal":dados['tForaHoriginal'], 'banca': dados['banca']}, { "$set": {"ativo": False}})
         else:
