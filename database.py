@@ -20,8 +20,11 @@ class Database():
         print('carregado: '+str(result.inserted_id))
     def desativarAtivos(self,dados):
         print('desativas')
-        result = self.collection.update_many({"ativo": True, "tCasa": dados['tCasa'], "tFora":dados['tFora'], 'banca': dados['banca']}, { "$set": {"ativo": False}})
-        print(result.raw_result)
+        if dados['sistema'] == "kbets":
+            result = self.collection.update_many({"ativo": True, "tCasaOriginal": dados['tCasaOriginal'], "tForaHoriginal":dados['tForaHoriginal'], 'banca': dados['banca']}, { "$set": {"ativo": False}})
+        else:
+            result = self.collection.update_many({"ativo": True, "tCasa": dados['tCasa'], "tFora":dados['tFora'], 'banca': dados['banca']}, { "$set": {"ativo": False}})
+
     def getAllTimes(self):
         aggregate = [{"$match": { "ativo": True,  "sistema": "sa sports" } },{"$group" : { "_id": { "tCasa": "$tCasa", "tFora" : "$tFora"}} }]
         result = Database.mongo["oddsing"]["odds"].aggregate(aggregate)
