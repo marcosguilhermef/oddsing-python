@@ -28,6 +28,7 @@ class CarregamentoDeLinks():
                 listLinksScraping = list(map( lambda x: link +'/simulador'+ x, responseBody.Raspar()))
             except:
                 print('pula')
+                listLinksScraping = []
             newList = newList + listLinksScraping
         self.listLinkOdds = Link(newList)
         return self.listLinkOdds
