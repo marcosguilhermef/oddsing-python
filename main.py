@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from pymongo import database
 from scrapingLinks import RaparLinksOddsSa as scrap
 from scrapingLinks import RaparLinksOddsKbets as scrapK
