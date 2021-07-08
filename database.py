@@ -10,14 +10,17 @@ class Database():
     listaDeJogos = None
     def setCollection(self):
         self.collection = self.databaseM['odds']
+
     def insertDados(self, dados):
         self.dados = dados
         self.cur.execute("insert into jogo (tCasa,tFora,banca,odds) values (?, ?, ?, ?)", (self.dados['tCasa'], self.dados['tFora'], self.dados['banca'], str(self.dados['odds'])))
         self.con.commit()
+
     def insertMongo(self,dados):
         self.desativarAtivos(dados)
         result = self.collection.insert_one(dados)
         print('carregado: '+str(result.inserted_id))
+        
     def desativarAtivos(self,dados):
         print(dados['sistema'])
         if dados['sistema'] == "kbets":

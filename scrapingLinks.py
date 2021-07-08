@@ -3,11 +3,14 @@ from warnings import catch_warnings
 import connect
 from bs4 import BeautifulSoup
 import re
-
+import datetime
 class RaparLinksOddsSa():
     def __init__(self,link):
         self.link = link
         self.body = self.getLinksMaisOdds()
+        self.pais = None,
+        self.campeonato = None
+        self.dataMatch = None
     
     def getLinksMaisOdds(self):
         return connect.ConectSA(self.link).getBody()
@@ -21,7 +24,39 @@ class RaparLinksOddsSa():
         linksUteis = map(lambda link:  link if re.search('apostas.aspx',link) != None else None ,linksTratados)
         linksUteisSemNones = self.removeNone(linksUteis)
         return linksUteisSemNones
-    
+    def RaspagemCompleta(self):
+        soup = BeautifulSoup(self.body, 'html.parser')
+        a = soup.find_all('tr',limit=False) 
+        informacoesIteis = []
+        i = 0
+        for e in a:
+            try:
+                if 'tcpais' in e.td['class']:
+                    self.rasparPais(e.td.span.span.next_sibling.get_text())
+                if 'tccampeonato' in e.td['class']:
+                    self.rasparCampeonato(e.td.span.extract())
+                if 'th_1' in e.td['class']:
+                    date_match = e.td.p.next_sibling.get_text()
+                    link = self.RasparLink(e)
+                    link = re.sub('(./)','/',link)
+                    informacoesIteis.append({
+                        'campeonato': self.campeonato,
+                        'pais': self.pais,
+                        'date_match': datetime.datetime.strptime(date_match, '%d/%m/%Y %H:%M'),
+                        'link': self.link+'/simulador'+link
+                    })
+            except:
+                pass
+        return informacoesIteis
+    def rasparPais(self,pais):
+        self.pais = pais.replace(u'\xa0', u' ')
+    def rasparCampeonato(self,campeonato):
+        self.campeonato = campeonato.get_text()
+    def rasparDataMatch(self,dataMatch):
+        self.dataMatch = dataMatch
+    def RasparLink(self,raw):
+        return raw.td.find_next_sibling(name="td", attrs={ 'class': 'th_5' }).a['href']
+
     def removeNone(self, link):
         newList = []
         for i in link:
@@ -48,7 +83,14 @@ class RaparLinksOddsKbets():
     def getAllId(self):
         newArr = []
         for item in self.gameList:
-            newArr.append({"link":"http://bestgameonline.net/axios/oddsWithGroups/"+item['id'], "id":item['id'], "gameItem": list(filter( lambda x : x['id'] == item['id'] ,self.gameList)) })
+            newArr.append(
+                {
+                    "link":"http://bestgameonline.net/axios/oddsWithGroups/"+item['id'], 
+                    "id": item['id'], 
+                    "gameItem": list(filter( lambda x : x['id'] == item['id'] ,self.gameList)),
+                    "date_match": datetime.datetime.strptime(item['data_hora'], '%Y-%m-%d %H:%M:%S')
+                }
+            )
         return newArr
 
     def getOddsGroups(self):
@@ -57,4 +99,4 @@ class RaparLinksOddsKbets():
     def getgameList(self):
         return self.gameList
     
-    
+#teste = print(RaparLinksOddsSa('https://betscash.net').RaspagemCompleta())

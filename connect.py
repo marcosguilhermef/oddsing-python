@@ -10,7 +10,7 @@ class ConectSA():
         return r
 
     def getBody(self):
-        return self.response.text
+        return self.response.content
     def getResponseCode(self):
         return self.response.status_code
 class ConectKbets():

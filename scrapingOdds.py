@@ -8,13 +8,14 @@ import database
 from difflib import SequenceMatcher
 
 class RaparOddsSa():
-    def __init__(self,link):
+    def __init__(self,link,dateMatch = ''):
         self.link = link
         self.Request()
         self.StartSoup()
         self.oddsJSON = {}
         self.oddsJSON['data_hora'] = datetime.datetime.now()
         self.oddsJSON['sistema'] = 'sa sports'
+        self.oddsJSON['date_match'] = dateMatch
 
        
     def Request(self):
@@ -30,6 +31,7 @@ class RaparOddsSa():
         self.oddsJSON['tCasa'] = splod[0]
         self.oddsJSON['tFora'] = splod[1]
         return self.CasaFora
+    
     def scrapOdds(self):
         #print(self.body)
         tipoDeOdd = None
@@ -66,16 +68,16 @@ class RaparOddsSa():
 
 class rasparDadosKbets():
     listaDeJogos = None
-    def __init__(self,link,casa= '',fora = ''):
+    def __init__(self,link,casa= '',fora = '', dateMatch= None):
         self.link = link
         self.casa = casa
         self.fora = fora
         self.Request()
         self.oddsJSON = {}
         self.oddsJSON['sistema'] = 'kbets'
+        self.oddsJSON['date_match'] = datetime.datetime.strptime(dateMatch, '%Y-%m-%d %H:%M:%S')
 
-        
-       
+
     def Request(self):
         self.body = connect.ConectKbets(self.link).getBody()
     

@@ -27,31 +27,39 @@ class CarregamentoDeLinks():
                 responseBody= scrap(link)
                 listLinksScraping = list(map( lambda x: link +'/simulador'+ x, responseBody.Raspar()))
             except:
-                print('pula')
                 listLinksScraping = []
             newList = newList + listLinksScraping
         self.listLinkOdds = Link(newList)
         return self.listLinkOdds
+
+    def ScrapingLinksSARenew(self):
+        newList = []
+        for link in self.links:
+            try:
+                listLinksScraping = scrap(link).RaspagemCompleta()
+            except:
+                listLinksScraping = []
+            newList = newList + listLinksScraping
+        return newList
+
     def ScrapingLinksKbets(self):
         for k in self.linksK:
-            print(k)
             self.scrapingOddsKbets(scrapK(k))
 
     def scrapingOddsKbets(self,instance):
         for item in instance.getAllId():
-            result = scrapkbetsodds(item['link'], casa=item['gameItem'][0]['tc'], fora=item['gameItem'][0]['tf']).Start()
+            result = scrapkbetsodds(item['link'], casa=item['gameItem'][0]['tc'], fora=item['gameItem'][0]['tf'],dateMatch=item['gameItem'][0]['data_hora']).Start()
             self.salve(result)
 
     def ScrapingOddSA(self):
-        linkOdds = self.ScrapingLinksSA()
-        linkOdds = list(linkOdds.getLinkList())
-        arrReturning = []
-        for link in linkOdds:
+        linkOdds = self.ScrapingLinksSARenew()
+        for info in linkOdds:
             try:
-                a = scrapsaodds(link).scrapCompleto()
+                a = scrapsaodds(info['link'],info['date_match']).scrapCompleto()
                 self.salve(a)
             except:
-                print('pula')    
+                print('pula')   
+    
     def salve(self,body):
        print('salvando')
        self.database.insertMongo(body)
