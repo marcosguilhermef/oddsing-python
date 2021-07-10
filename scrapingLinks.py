@@ -42,7 +42,7 @@ class RaparLinksOddsSa():
                     informacoesIteis.append({
                         'campeonato': self.campeonato,
                         'pais': self.pais,
-                        'date_match': datetime.datetime.strptime(date_match, '%d/%m/%Y %H:%M'),
+                        'date_match': datetime.datetime.strptime(date_match+" -03:00", '%d/%m/%Y %H:%M %z'),
                         'link': self.link+'/simulador'+link
                     })
             except:
@@ -88,7 +88,7 @@ class RaparLinksOddsKbets():
                     "link":"http://bestgameonline.net/axios/oddsWithGroups/"+item['id'], 
                     "id": item['id'], 
                     "gameItem": list(filter( lambda x : x['id'] == item['id'] ,self.gameList)),
-                    "date_match": datetime.datetime.strptime(item['data_hora'], '%Y-%m-%d %H:%M:%S')
+                    "date_match": datetime.datetime.strptime(item['data_hora']+" -03:00", '%Y-%m-%d %H:%M:%S %z')
                 }
             )
         return newArr
