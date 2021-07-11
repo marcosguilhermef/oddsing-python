@@ -75,7 +75,7 @@ class rasparDadosKbets():
         self.Request()
         self.oddsJSON = {}
         self.oddsJSON['sistema'] = 'kbets'
-        self.oddsJSON['date_match'] = datetime.datetime.strptime(dateMatch, '%Y-%m-%d %H:%M:%S')
+        self.oddsJSON['date_match'] = dateMatch
 
 
     def Request(self):

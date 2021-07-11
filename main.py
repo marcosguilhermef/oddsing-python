@@ -48,7 +48,7 @@ class CarregamentoDeLinks():
 
     def scrapingOddsKbets(self,instance):
         for item in instance.getAllId():
-            result = scrapkbetsodds(item['link'], casa=item['gameItem'][0]['tc'], fora=item['gameItem'][0]['tf'],dateMatch=item['gameItem'][0]['data_hora']).Start()
+            result = scrapkbetsodds(item['link'], casa=item['gameItem'][0]['tc'], fora=item['gameItem'][0]['tf'],dateMatch=item['date_match']).Start()
             self.salve(result)
 
     def ScrapingOddSA(self):
