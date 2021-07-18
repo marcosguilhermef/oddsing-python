@@ -51,8 +51,10 @@ class RaparOddsSa():
         return self.oddsJSON 
         #json.dumps(self.oddsJSON, indent = 4) 
     def scrapNomeBanca(self):
-        self.oddsJSON['banca'] = re.search('(?<=https://)\w{1,}|(?<=http://)\w{1,}', self.link).group(0)
-        
+        self.oddsJSON['banca'] = re.search('\w{1,}', self.link).group(0)
+        print(self.oddsJSON['banca'])
+       
+
     def setStatus(self):
         self.oddsJSON['ativo'] = True 
 
@@ -89,7 +91,7 @@ class rasparDadosKbets():
         self.setOdds()
         return self.oddsJSON
     def setBanca(self):
-        self.oddsJSON['banca'] = re.search('(?<=https://)\w{1,}|(?<=http://)\w{1,}', self.link).group(0)
+        self.oddsJSON['banca'] = re.search('\w{1,}', self.link).group(0)
 
     def setHora(self):
         self.oddsJSON['data_hora'] = datetime.datetime.now()

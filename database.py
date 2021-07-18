@@ -38,6 +38,6 @@ class Database():
     def getBancasList(self, sistema):
         collection = self.databaseM['banca']
         result = collection.find({"rastrear": True, "sistema": sistema},{"_id":0,"url":1})
-        result = list(map( lambda x : 'https://'+x['url'] , result))
+        result = list(map( lambda x : x['url'] , result))
         return result
 

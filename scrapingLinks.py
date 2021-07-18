@@ -85,7 +85,7 @@ class RaparLinksOddsKbets():
         for item in self.gameList:
             newArr.append(
                 {
-                    "link":"http://bestgameonline.net/axios/oddsWithGroups/"+item['id'], 
+                    "link":self.link+"/axios/oddsWithGroups/"+item['id'], 
                     "id": item['id'], 
                     "gameItem": list(filter( lambda x : x['id'] == item['id'] ,self.gameList)),
                     "date_match": datetime.datetime.strptime(item['data_hora']+" -03:00", '%Y-%m-%d %H:%M:%S %z')

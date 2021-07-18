@@ -6,7 +6,12 @@ class ConectSA():
         self.link   = SALink
         self.response   = self.setResponse()
     def setResponse(self):
-        r = requests.get(self.link)
+        try:
+            r = requests.get('https://'+self.link)
+        except requests.exceptions.SSLError:
+            r = requests.get('http://'+self.link)
+        except:
+            pass
         return r
 
     def getBody(self):
@@ -18,7 +23,14 @@ class ConectKbets():
         self.link   = link
         self.response   = self.setResponse()
     def setResponse(self):
-        r = requests.get(self.link)
+        try:
+            print('https://'+self.link)
+            r = requests.get('https://'+self.link)
+        except requests.exceptions.SSLError:
+            print('http://'+self.link)
+            r = requests.get('http://'+self.link)
+        except:
+            pass
         return r
 
     def getBody(self):
