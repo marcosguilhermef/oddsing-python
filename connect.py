@@ -8,11 +8,12 @@ class ConectSA():
     def setResponse(self):
         try:
             r = requests.get('https://'+self.link)
+            return r
         except requests.exceptions.SSLError:
             r = requests.get('http://'+self.link)
-        except:
-            pass
-        return r
+            return r
+        except Exception as erro:
+            raise erro
 
     def getBody(self):
         return self.response.content
@@ -26,12 +27,13 @@ class ConectKbets():
         try:
             print('https://'+self.link)
             r = requests.get('https://'+self.link)
+            return r
         except requests.exceptions.SSLError:
             print('http://'+self.link)
             r = requests.get('http://'+self.link)
-        except:
-            pass
-        return r
+            return r
+        except Exception as erro:
+            raise erro
 
     def getBody(self):
         return self.response.json()

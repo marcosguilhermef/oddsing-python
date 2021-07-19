@@ -44,7 +44,10 @@ class CarregamentoDeLinks():
 
     def ScrapingLinksKbets(self):
         for k in self.linksK:
-            self.scrapingOddsKbets(scrapK(k))
+            try:
+                self.scrapingOddsKbets(scrapK(k))
+            except:
+                pass
 
     def scrapingOddsKbets(self,instance):
         for item in instance.getAllId():
@@ -66,5 +69,5 @@ class CarregamentoDeLinks():
 
 a = CarregamentoDeLinks()
 data = Database()
-#a.ScrapingOddSA()
+a.ScrapingOddSA()
 a.ScrapingLinksKbets()

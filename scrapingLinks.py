@@ -74,7 +74,10 @@ class RaparLinksOddsKbets():
         self.Start()
        
     def Request(self):
-        self.body = connect.ConectKbets(self.link+'/axios/data').getBody()
+        try:
+            self.body = connect.ConectKbets(self.link+'/axios/data').getBody()
+        except Exception as e:
+            raise e
         
     def Start(self):
         self.oddsGroups = self.body['odds']
