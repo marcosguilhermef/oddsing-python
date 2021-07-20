@@ -72,4 +72,4 @@ class CarregamentoDeLinks():
 a = CarregamentoDeLinks()
 data = Database()
 a.ScrapingOddSA()
-a.ScrapingLinksKbets()
+#a.ScrapingLinksKbets()

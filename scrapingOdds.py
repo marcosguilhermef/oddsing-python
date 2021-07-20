@@ -41,7 +41,7 @@ class RaparOddsSa():
             td = odd.find_all('td')
             try:
                 text = td[1].get_text()
-                parametrizar =  { "nome":td[0].get_text(),"Taxa": float(text != '' if text.replace(',','.') else 0 ) , "tipo": tipoDeOdd} 
+                parametrizar =  { "nome":td[0].get_text(),"Taxa": float(text.replace(',','.') if text != '' else '0') , "tipo": tipoDeOdd} 
                 self.oddsJSON['odds'].append(parametrizar)
             except IndexError:
                 if len(td) != 0:
