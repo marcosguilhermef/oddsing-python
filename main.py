@@ -11,6 +11,7 @@ from scrapingOdds import rasparDadosKbets as scrapkbetsodds
 from SalvarEmTexto import SalvarArquivoTexto as save
 from threading import Thread
 from database import Database
+import traceback
 
 class CarregamentoDeLinks():
     def __init__(self):
@@ -60,8 +61,9 @@ class CarregamentoDeLinks():
             try:
                 a = scrapsaodds(info['link'],info['date_match']).scrapCompleto()
                 self.salve(a)
-            except:
-                print('pula')   
+            except Exception:
+                traceback.print_exc()
+  
     
     def salve(self,body):
        print('salvando')
