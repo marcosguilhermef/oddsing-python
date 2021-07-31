@@ -4,6 +4,8 @@ import connect
 from bs4 import BeautifulSoup
 import re
 import datetime
+import json
+
 class RaparLinksOddsSa():
     def __init__(self,link):
         self.link = link
@@ -101,5 +103,42 @@ class RaparLinksOddsKbets():
 
     def getgameList(self):
         return self.gameList
-    
-#teste = print(RaparLinksOddsSa('https://betscash.net').RaspagemCompleta())
+
+
+class RaparLinksOddsBolinha():
+    def __init__(self,link):
+        self.link = link
+        self.oddsJSON = {}
+        self.Request()
+        #self.Start()
+       
+    def Request(self):
+        try:
+            self.body = connect.ConectKbets(self.link+'/futebolapi/api/CampJogo/getEvents/1').getBody()
+        except Exception as e:
+            raise e
+    def getBody(self):
+        return self.body
+        
+
+    def getMainData(self):
+        newArr = []
+        body = self.getBody()
+        for i in body:
+            try:
+                res = json.loads(i['Value'])
+                None if res == None else newArr.append(
+                    {
+                        'camp_jog_id':    res["camp_jog_id"],
+                        'camp_nome':      res["camp_nome"],
+                        'tCasa':      res["casa_time"],
+                        'tFora':     res["visit_time"],
+                        'date_match': datetime.datetime.strptime(res["dt_hr_ini"],'%Y-%m-%dT%H:%M:%S'),
+                        'link': self.link+'/futebolapi/api/CampJogo/getOdds/'+str(res["camp_jog_id"])
+                    }
+                ) 
+            except Exception as e:
+                print('erro', e)
+        return newArr
+        
+

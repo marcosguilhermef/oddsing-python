@@ -1,13 +1,22 @@
 #!/usr/bin/python3
 from pymongo import database
+
 from scrapingLinks import RaparLinksOddsSa as scrap
 from scrapingLinks import RaparLinksOddsKbets as scrapK
+from scrapingLinks import RaparLinksOddsBolinha as scrapBol
+
+
 from datasets import Link
+
 from lerArquivoDeLinks import ArquivoSA as lerSa
 from lerArquivoDeLinks import ArquivoKBETS as lerK
+
 from connect import ConectSA
+
 from scrapingOdds import RaparOddsSa as scrapsaodds
 from scrapingOdds import rasparDadosKbets as scrapkbetsodds
+from scrapingOdds import ScrapingOddsBolinha as scrapbolinhaodds
+
 from SalvarEmTexto import SalvarArquivoTexto as save
 from threading import Thread
 from database import Database
@@ -18,21 +27,14 @@ class CarregamentoDeLinks():
         self.database =  Database()
         self.links = self.database.getBancasList('sa sports')
         self.linksK = self.database.getBancasList('kbets')
+
+        self.linksBolinha = self.database.getBancasList('bolinha')
+
+
+        self.linksBolinha = 'bolinha'
         self.bancaListLink = None
         self.listLinkOdds  = None
         
-    def ScrapingLinksSA(self):
-        newList = []
-        for link in self.links:
-            try:
-                responseBody= scrap(link)
-                listLinksScraping = list(map( lambda x: link +'/simulador'+ x, responseBody.Raspar()))
-            except:
-                listLinksScraping = []
-            newList = newList + listLinksScraping
-        self.listLinkOdds = Link(newList)
-        return self.listLinkOdds
-
     def ScrapingLinksSARenew(self):
         newList = []
         for link in self.links:
@@ -64,6 +66,13 @@ class CarregamentoDeLinks():
             except Exception:
                 traceback.print_exc()
   
+    def ScrapingOddsBolinha(self,link2):
+        link = scrapBol(link2).getMainData()
+        for i in link:
+            print(i['tCasa']+" x "+i['tFora'])
+            odds = scrapbolinhaodds(i['link'],i['date_match'],i['tCasa'],i['tFora'],i['camp_nome']).scrapCompleto()
+            self.salve(odds)
+
     
     def salve(self,body):
        print('salvando')
@@ -71,5 +80,7 @@ class CarregamentoDeLinks():
 
 a = CarregamentoDeLinks()
 data = Database()
-a.ScrapingOddSA()
-#a.ScrapingLinksKbets()
+for i in range(1,1000):
+    a.ScrapingOddSA()
+    a.ScrapingLinksKbets()
+    a.ScrapingOddsBolinha("betsbola.com")

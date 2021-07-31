@@ -5,6 +5,7 @@ import re
 import json  
 import datetime
 import database
+from OddParametrizacao import bolinhaParaSa
 from difflib import SequenceMatcher
 
 class RaparOddsSa():
@@ -28,8 +29,8 @@ class RaparOddsSa():
         self.CasaFora = self.soup.find(id='conteudo_tituloCampeonato')
         self.CasaFora = re.sub('Apostas Disponíveis - ','',self.CasaFora.text)
         splod = re.split('x',self.CasaFora)
-        self.oddsJSON['tCasa'] = splod[0]
-        self.oddsJSON['tFora'] = splod[1]
+        self.oddsJSON['tCasa'] = re.sub('(\s)$|^(\s)','',splod[0])
+        self.oddsJSON['tFora'] = re.sub('(\s)$|^(\s)','',splod[1])
         return self.CasaFora
     
     def scrapOdds(self):
@@ -132,3 +133,73 @@ class rasparDadosKbets():
 
     def setOdds(self):
         self.oddsJSON['odds'] = list(map( lambda x : { "tipo": x["grupo"], "Taxa": float(x["taxa"]), "nome": x["odds"] } , self.body))
+
+class ScrapingOddsBolinha():
+    def __init__(self,link, date_match,tCasa = '',tFora = '',campeonato = ''):
+        self.link = link
+        self.Request()
+        
+        self.oddsJSON = {}
+        self.oddsJSON['data_hora'] = datetime.datetime.now()
+        self.oddsJSON['sistema'] = 'bolinha'
+        self.oddsJSON['tCasa'] = tCasa
+        self.oddsJSON['tFora'] = tFora
+        self.oddsJSON['tCasaOriginal'] = tCasa
+        self.oddsJSON['tForaHoriginal'] =tFora
+        self.oddsJSON['visivel'] = True
+        self.oddsJSON['ativo'] = True
+        self.oddsJSON['banca'] = re.search('\w{1,}', self.link).group(0)
+        self.oddsJSON['date_match'] = date_match
+        self.oddsJSON['campeonato'] = campeonato
+
+        self.mudarNome()
+
+
+    def Request(self):
+        try:
+            self.body = connect.ConectKbets(self.link).getBody()
+            self.body = re.sub("'{","{",str(self.body))
+            self.body = re.sub("}'",'}',str(self.body))
+            self.body = re.sub("'","\"",self.body)
+            self.body = json.loads(self.body)
+        except Exception as e:
+            raise e
+
+    def getBody(self):
+        return self.body[0]
+    def mudarNome(self):
+        db = database.Database()
+        lista = db.getAllTimes()
+        self.listaSAgames = lista
+
+        novoNome = self.obterNomeCasaNomeFora(self.oddsJSON['tCasa'],self.oddsJSON['tFora'])
+        self.oddsJSON['tCasa'] = novoNome['casa']
+        self.oddsJSON['tFora'] = novoNome['fora']
+
+    def scrapCompleto(self):
+        self.scrapOdds()
+        return self.oddsJSON
+
+    def scrapOdds(self):
+        self.oddsJSON['odds'] = []
+        for i in self.body:
+            compatibilizar = bolinhaParaSa(i['Value']['cat_id'],i['Value']['descricao'])
+            odd_dados = { 'nome': compatibilizar.getName(),'Taxa': i['Value']['taxa'] ,'tipo': compatibilizar.getGrupoOdd() }
+            self.oddsJSON['odds'].append(odd_dados)
+    
+    def obterNomeCasaNomeFora(self, casa,fora):
+        listaSAgames = self.listaSAgames
+        casaResult = list(filter(lambda x: SequenceMatcher(None,x['tCasa'],casa).ratio() > 0.70 ,listaSAgames))
+        if len(casaResult) == 0:
+            casaResult = casa
+        else:
+            casaResult =casaResult[0]['tCasa']
+            print('ratio: ',SequenceMatcher(None,casaResult,casa).ratio()," casa: "+casaResult," casa2: ", casa)
+
+        foraResult = list(filter(lambda x: SequenceMatcher(None,x['tFora'],fora).ratio() > 0.70,listaSAgames))
+        if len(foraResult) == 0:
+            foraResult = fora
+        else:
+            foraResult = foraResult[0]['tFora']
+            print('ratio: ',SequenceMatcher(None,foraResult,fora).ratio()," fora: "+foraResult," fora2: ", fora)
+        return { "casa": casaResult, "fora": foraResult }
