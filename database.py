@@ -1,10 +1,13 @@
 import sqlite3
 import pymongo
 from pymongo import aggregation
+import urllib
 
 import json
 class Database():
     mongo = pymongo.MongoClient("mongodb://localhost:27017/")
+    #mongo = pymongo.MongoClient("mongodb://oddsing:"+urllib.parse.quote("!@%17aBc1212")+"@localhost:27017/")
+
     databaseM = mongo["oddsing"]
     collection = databaseM['odds']
     listaDeJogos = None

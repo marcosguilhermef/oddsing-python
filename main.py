@@ -70,8 +70,11 @@ class CarregamentoDeLinks():
         link = scrapBol(link).getMainData()
         for i in link:
             print(i['tCasa']+" x "+i['tFora'])
-            odds = scrapbolinhaodds(i['link'],i['date_match'],i['tCasa'],i['tFora'],i['camp_nome']).scrapCompleto()
-            self.salve(odds)
+            try:
+                odds = scrapbolinhaodds(i['link'],i['date_match'],i['tCasa'],i['tFora'],i['camp_nome']).scrapCompleto()
+                self.salve(odds)
+            except:
+                print('erro')
 
     
     def salve(self,body):
@@ -84,3 +87,4 @@ for i in range(1,1000):
     a.ScrapingOddSA()
     a.ScrapingLinksKbets()
     a.ScrapingOddsBolinha()
+#a.RasparOddsBolinhas("esportenetvip.com.br")
