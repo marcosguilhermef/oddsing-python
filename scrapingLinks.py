@@ -133,7 +133,7 @@ class RaparLinksOddsBolinha():
                         'camp_nome':      res["camp_nome"],
                         'tCasa':      res["casa_time"],
                         'tFora':     res["visit_time"],
-                        'date_match': datetime.datetime.strptime(res["dt_hr_ini"],'%Y-%m-%dT%H:%M:%S'),
+                        'date_match': datetime.datetime.strptime(res["dt_hr_ini"]+" -03:00",'%Y-%m-%dT%H:%M:%S %z'),
                         'link': self.link+'/futebolapi/api/CampJogo/getOdds/'+str(res["camp_jog_id"])
                     }
                 ) 
