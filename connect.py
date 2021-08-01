@@ -57,15 +57,32 @@ class ConectBolinha():
             a = Cookie()
             r = requests.get('https://'+self.link, cookies = a.cookies)
             a.setCookie(r.cookies)
+            if r.status_code == 500:
+                raise  requests.exceptions.ConnectionError
             return r
         except requests.exceptions.SSLError:
             print('http://'+self.link)
             a = Cookie()
             r = requests.get('http://'+self.link, cookies = a.cookies)
             a.setCookie(r.cookies)
+            if r.status_code == 500:
+                raise  requests.exceptions.ConnectionError
             return r
-        except Exception as erro:
-            raise erro
+        except requests.exceptions.ConnectionError:
+            try:
+                proxies = {
+                    "http": "http://lum-customer-hl_6fcc0e29-zone-static-route_err-pass_dyn-country-br:1art1pt9d8mi@zproxy.lum-superproxy.io:22225",
+                    "https": "http://lum-customer-hl_6fcc0e29-zone-static-route_err-pass_dyn-country-br:1art1pt9d8mi@zproxy.lum-superproxy.io:22225",
+                }
+                print('http://'+self.link)
+                r = requests.get('https://'+self.link, proxies=proxies)
+                return r
+            except:
+                print('http://'+self.link)
+                r = requests.get('http://'+self.link, proxies = proxies)
+                return r
+
+        
 
     def getBody(self):
         return self.response.json()
