@@ -27,11 +27,7 @@ class CarregamentoDeLinks():
         self.database =  Database()
         self.links = self.database.getBancasList('sa sports')
         self.linksK = self.database.getBancasList('kbets')
-
         self.linksBolinha = self.database.getBancasList('bolinha')
-
-
-        self.linksBolinha = 'bolinha'
         self.bancaListLink = None
         self.listLinkOdds  = None
         
@@ -66,8 +62,12 @@ class CarregamentoDeLinks():
             except Exception:
                 traceback.print_exc()
   
-    def ScrapingOddsBolinha(self,link2):
-        link = scrapBol(link2).getMainData()
+    def ScrapingOddsBolinha(self):
+        for i in self.linksBolinha:
+            self.RasparOddsBolinhas(i)
+
+    def RasparOddsBolinhas(self,link):
+        link = scrapBol(link).getMainData()
         for i in link:
             print(i['tCasa']+" x "+i['tFora'])
             odds = scrapbolinhaodds(i['link'],i['date_match'],i['tCasa'],i['tFora'],i['camp_nome']).scrapCompleto()
@@ -83,4 +83,4 @@ data = Database()
 for i in range(1,1000):
     a.ScrapingOddSA()
     a.ScrapingLinksKbets()
-    a.ScrapingOddsBolinha("betsbola.com")
+    a.ScrapingOddsBolinha()
