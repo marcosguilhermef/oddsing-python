@@ -83,8 +83,9 @@ class CarregamentoDeLinks():
 
 a = CarregamentoDeLinks()
 data = Database()
-for i in range(1,1000):
-    a.ScrapingOddSA()
-    a.ScrapingLinksKbets()
-    a.ScrapingOddsBolinha()
-#a.RasparOddsBolinhas("esportenetvip.com.br")
+#for i in range(1,1000):
+    #a.ScrapingOddSA()
+    #a.ScrapingLinksKbets()
+    #a.ScrapingOddsBolinha()
+
+a.RasparOddsBolinhas("esportenetvip.com.br")

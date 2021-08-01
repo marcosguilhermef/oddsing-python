@@ -41,3 +41,35 @@ class ConectKbets():
     def getResponseCode(self):
         return self.response.status_code
 
+class Cookie():
+    cookies = None
+    def setCookie(self,cookie):
+        self.cookies = cookie
+    
+class ConectBolinha():
+    cookies = ''
+    def __init__(self,link):
+        self.link   = link
+        self.response   = self.setResponse()
+    def setResponse(self):
+        try:
+            print('https://'+self.link)
+            a = Cookie()
+            r = requests.get('https://'+self.link, cookies = a.cookies)
+            a.setCookie(r.cookies)
+            return r
+        except requests.exceptions.SSLError:
+            print('http://'+self.link)
+            a = Cookie()
+            r = requests.get('http://'+self.link, cookies = a.cookies)
+            a.setCookie(r.cookies)
+            return r
+        except Exception as erro:
+            raise erro
+
+    def getBody(self):
+        return self.response.json()
+        
+    def getResponseCode(self):
+        return self.response.status_code
+

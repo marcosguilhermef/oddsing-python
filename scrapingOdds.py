@@ -157,7 +157,7 @@ class ScrapingOddsBolinha():
 
     def Request(self):
         try:
-            self.body = connect.ConectKbets(self.link).getBody()
+            self.body = connect.ConectBolinha(self.link).getBody()
             self.body = re.sub("'{","{",str(self.body))
             self.body = re.sub("}'",'}',str(self.body))
             self.body = re.sub("'","\"",self.body)

@@ -114,7 +114,7 @@ class RaparLinksOddsBolinha():
        
     def Request(self):
         try:
-            self.body = connect.ConectKbets(self.link+'/futebolapi/api/CampJogo/getEvents/1').getBody()
+            self.body = connect.ConectBolinha(self.link+'/futebolapi/api/CampJogo/getEvents/1').getBody()
         except Exception as e:
             raise e
     def getBody(self):
