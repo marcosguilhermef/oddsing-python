@@ -28,6 +28,8 @@ class Database():
         print(dados['sistema'])
         if dados['sistema'] == "kbets":
             result = self.collection.update_many({"ativo": True, "tCasaOriginal": dados['tCasaOriginal'], "tForaHoriginal":dados['tForaHoriginal'], 'banca': dados['banca']}, { "$set": {"ativo": False}})
+        elif dados['sistema'] == "bolinha":
+            result = self.collection.update_many({"ativo": True, "tCasaOriginal": dados['tCasaOriginal'], "tForaHoriginal":dados['tForaHoriginal'], 'banca': dados['banca']}, { "$set": {"ativo": False}})
         else:
             result = self.collection.update_many({"ativo": True, "tCasa": dados['tCasa'], "tFora":dados['tFora'], 'banca': dados['banca']}, { "$set": {"ativo": False}})
 
