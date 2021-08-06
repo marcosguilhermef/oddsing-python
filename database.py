@@ -30,6 +30,7 @@ class Database():
             result = self.collection.update_many({"ativo": True, "tCasaOriginal": dados['tCasaOriginal'], "tForaHoriginal":dados['tForaHoriginal'], 'banca': dados['banca']}, { "$set": {"ativo": False}})
         elif dados['sistema'] == "bolinha":
             result = self.collection.update_many({"ativo": True, "tCasaOriginal": dados['tCasaOriginal'], "tForaHoriginal":dados['tForaHoriginal'], 'banca': dados['banca']}, { "$set": {"ativo": False}})
+            print(result.modified_count)
         else:
             result = self.collection.update_many({"ativo": True, "tCasa": dados['tCasa'], "tFora":dados['tFora'], 'banca': dados['banca']}, { "$set": {"ativo": False}})
 

@@ -31,15 +31,7 @@ class CarregamentoDeLinks():
         self.bancaListLink = None
         self.listLinkOdds  = None
         
-    def ScrapingLinksSARenew(self):
-        newList = []
-        for link in self.links:
-            try:
-                listLinksScraping = scrap(link).RaspagemCompleta()
-            except:
-                listLinksScraping = []
-            newList = newList + listLinksScraping
-        return newList
+    
 
     def ScrapingLinksKbets(self):
         for k in self.linksK:
@@ -54,14 +46,35 @@ class CarregamentoDeLinks():
             self.salve(result)
 
     def ScrapingOddSA(self):
-        linkOdds = self.ScrapingLinksSARenew()
-        for info in linkOdds:
-            try:
-                a = scrapsaodds(info['link'],info['date_match']).scrapCompleto()
-                self.salve(a)
-            except Exception:
-                traceback.print_exc()
-  
+        links = self.links
+        for link in links:
+            self.RaspagemCompletaLinkSA(link)
+
+    def RaspagemCompletaLinkSA(self,link):
+        arr = self.ScrapingLinkMainOddsSA(link)
+        self.RasparTodosOsLinksMaisOddsSA(arr)
+    
+    def ScrapingLinkMainOddsSA(self,link):
+        try:
+            listLinksScraping = scrap(link).RaspagemCompleta()
+        except:
+            listLinksScraping = []
+        return listLinksScraping
+        
+    def RasparTodosOsLinksMaisOddsSA(self,arr):
+        for dados in arr:
+            self.RasparMaisOddsSA(dados['link'],dados['date_match'])
+
+
+    def RasparMaisOddsSA(self,link,date_match):
+        try:
+            a = scrapsaodds(link,date_match).scrapCompleto()
+            self.salve(a)
+        except Exception:
+            traceback.print_exc()    
+
+    
+
     def ScrapingOddsBolinha(self):
         for i in self.linksBolinha:
             self.RasparOddsBolinhas(i)
@@ -69,7 +82,6 @@ class CarregamentoDeLinks():
     def RasparOddsBolinhas(self,link):
         link = scrapBol(link).getMainData()
         for i in link:
-            print(i['tCasa']+" x "+i['tFora'])
             try:
                 odds = scrapbolinhaodds(i['link'],i['date_match'],i['tCasa'],i['tFora'],i['camp_nome']).scrapCompleto()
                 self.salve(odds)
@@ -83,9 +95,10 @@ class CarregamentoDeLinks():
 
 a = CarregamentoDeLinks()
 data = Database()
-#for i in range(1,1000):
-    #a.ScrapingOddSA()
-    #a.ScrapingLinksKbets()
-    #a.ScrapingOddsBolinha()
+for i in range(1,1000):
+    a.ScrapingOddSA()
+    a.ScrapingLinksKbets()
+    a.ScrapingOddsBolinha()
+a.RaspagemCompletaLinkSA('betscash.net')
 
-a.RasparOddsBolinhas("esportenetvip.com.br")
+#a.RasparOddsBolinhas("esportenetvip.com.br")
