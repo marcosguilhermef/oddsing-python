@@ -12,8 +12,12 @@ from scrapingOdds import rasparDadosKbets as scrapkbetsodds
 from scrapingOdds import ScrapingOddsBolinha as scrapbolinhaodds
 from SalvarEmTexto import SalvarArquivoTexto as save
 from threading import Thread
+import threading
 from database import Database
 import traceback
+import logging
+
+import concurrent.futures
 
 class CarregamentoDeLinks():
     def __init__(self):
@@ -56,12 +60,14 @@ class CarregamentoDeLinks():
         return listLinksScraping
 
     def RasparTodosOsLinksMaisOddsSA(self,arr):
-        for dados in arr:
-            self.RasparMaisOddsSA(dados['link'],dados['date_match'])
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            executor.map(self.RasparMaisOddsSA,arr)
+      
 
-    def RasparMaisOddsSA(self,link,date_match):
+    def RasparMaisOddsSA(self,dados):
+        print('thread: ',threading.get_ident())
         try:
-            a = scrapsaodds(link,date_match).scrapCompleto()
+            a = scrapsaodds(dados['link'],dados['date_match']).scrapCompleto()
             self.salve(a)
         except Exception:
             traceback.print_exc()    
@@ -84,7 +90,17 @@ class CarregamentoDeLinks():
 
 a = CarregamentoDeLinks()
 data = Database()
-for i in range(1,1000):
+
+while True:
     a.ScrapingOddSA()
     a.ScrapingLinksKbets()
     a.ScrapingOddsBolinha()
+""" while True:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        executor.submit(a.ScrapingOddSA)
+        executor.submit(a.ScrapingLinksKbets)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
+        executor.submit(a.ScrapingOddsBolinha)
+ """
+
