@@ -1,4 +1,5 @@
 import requests
+import asyncio
 
 #essa class faz a primeira requisição ao site
 class ConectSA():
