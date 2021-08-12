@@ -85,13 +85,11 @@ class CarregamentoDeLinks():
 
     def RasparOddsBolinhas(self,link):
         link = scrapBol(link).getMainData()
-        for i in link:
-            print(i)
-            try:
-                with concurrent.futures.ThreadPoolExecutor(max_workers=THREADS_N) as executor:
-                    executor.map(self.ProcessarMultithreadBolinha,i)
-            except:
-                traceback.print_exc()
+        try:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=THREADS_N) as executor:
+                executor.map(self.ProcessarMultithreadBolinha,link)
+        except:
+            traceback.print_exc()
     
     def ProcessarMultithreadBolinha(self,i):
         print('thread: ',threading.get_ident())
@@ -99,11 +97,11 @@ class CarregamentoDeLinks():
         self.salve(odds)
 
     def salve(self,body):
-       self.database.insertMongo(body)
+        print('salve')
+        self.database.insertMongo(body)
 
 a = CarregamentoDeLinks()
 data = Database()
-
 
 while True:
     a.ScrapingOddSA()
