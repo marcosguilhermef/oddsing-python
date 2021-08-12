@@ -19,6 +19,7 @@ import logging
 
 import concurrent.futures
 
+THREADS_N = 4
 class CarregamentoDeLinks():
     def __init__(self):
         self.database =  Database()
@@ -34,14 +35,20 @@ class CarregamentoDeLinks():
 
     def scrapingCompletoKbets(self,link):
         try:
-            self.scrapingOddsKbets(scrapK(link))
+            with concurrent.futures.ThreadPoolExecutor(max_workers=THREADS_N) as executor:
+                instancia = scrapK(link)
+                executor.map(self.scrapingOddsKbets,instancia.getAllId())
         except:
             traceback.print_exc()   
     
-    def scrapingOddsKbets(self,instance):
+    """ def scrapingOddsKbets(self,instance):
         for item in instance.getAllId():
             result = scrapkbetsodds(item['link'], casa=item['gameItem'][0]['tc'], fora=item['gameItem'][0]['tf'],dateMatch=item['date_match']).Start()
-            self.salve(result)
+            self.salve(result) """
+    def scrapingOddsKbets(self,item):
+        print('thread: ',threading.get_ident())
+        result = scrapkbetsodds(item['link'], casa=item['gameItem'][0]['tc'], fora=item['gameItem'][0]['tf'],dateMatch=item['date_match']).Start()
+        self.salve(result)
 
     def ScrapingOddSA(self):
         links = self.links
@@ -60,7 +67,7 @@ class CarregamentoDeLinks():
         return listLinksScraping
 
     def RasparTodosOsLinksMaisOddsSA(self,arr):
-        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=THREADS_N) as executor:
             executor.map(self.RasparMaisOddsSA,arr)
       
 
@@ -79,11 +86,17 @@ class CarregamentoDeLinks():
     def RasparOddsBolinhas(self,link):
         link = scrapBol(link).getMainData()
         for i in link:
+            print(i)
             try:
-                odds = scrapbolinhaodds(i['link'],i['date_match'],i['tCasa'],i['tFora'],i['camp_nome']).scrapCompleto()
-                self.salve(odds)
+                with concurrent.futures.ThreadPoolExecutor(max_workers=THREADS_N) as executor:
+                    executor.map(self.ProcessarMultithreadBolinha,i)
             except:
                 traceback.print_exc()
+    
+    def ProcessarMultithreadBolinha(self,i):
+        print('thread: ',threading.get_ident())
+        odds = scrapbolinhaodds(i['link'],i['date_match'],i['tCasa'],i['tFora'],i['camp_nome']).scrapCompleto()
+        self.salve(odds)
 
     def salve(self,body):
        self.database.insertMongo(body)
@@ -91,10 +104,12 @@ class CarregamentoDeLinks():
 a = CarregamentoDeLinks()
 data = Database()
 
+
 while True:
     a.ScrapingOddSA()
     a.ScrapingLinksKbets()
-    a.ScrapingOddsBolinha()
+    a.ScrapingOddsBolinha() 
+
 """ while True:
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
         executor.submit(a.ScrapingOddSA)

@@ -57,6 +57,7 @@ class ConectBolinha():
             a = Cookie()
             r = requests.get('https://'+self.link, cookies = a.cookies)
             a.setCookie(r.cookies)
+
             if r.status_code == 500:
                 raise  requests.exceptions.ConnectionError
             return r
@@ -79,6 +80,7 @@ class ConectBolinha():
                 return r
             except:
                 print('http://'+self.link)
+                print('erro')
                 r = requests.get('http://'+self.link, proxies = proxies)
                 return r
 

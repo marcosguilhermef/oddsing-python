@@ -124,6 +124,7 @@ class RaparLinksOddsBolinha():
     def getMainData(self):
         newArr = []
         body = self.getBody()
+        print('aqqui')
         for i in body:
             try:
                 res = json.loads(i['Value'])
