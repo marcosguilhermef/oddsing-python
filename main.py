@@ -7,7 +7,6 @@ from scrapingOdds import rasparDadosKbets as scrapkbetsodds
 from scrapingOdds import ScrapingOddsBolinha as scrapbolinhaodds
 from database import Database
 import traceback
-import asyncio
 
 class CarregamentoDeLinks():
     def __init__(self):
