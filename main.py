@@ -1,10 +1,17 @@
 #!/usr/bin/python3
+from pymongo import database
 from scrapingLinks import RaparLinksOddsSa as scrap
 from scrapingLinks import RaparLinksOddsKbets as scrapK
 from scrapingLinks import RaparLinksOddsBolinha as scrapBol
+from datasets import Link
+from lerArquivoDeLinks import ArquivoSA as lerSa
+from lerArquivoDeLinks import ArquivoKBETS as lerK
+from connect import ConectSA
 from scrapingOdds import RaparOddsSa as scrapsaodds
 from scrapingOdds import rasparDadosKbets as scrapkbetsodds
 from scrapingOdds import ScrapingOddsBolinha as scrapbolinhaodds
+from SalvarEmTexto import SalvarArquivoTexto as save
+from threading import Thread
 from database import Database
 import traceback
 
@@ -14,8 +21,8 @@ class CarregamentoDeLinks():
         self.links = self.database.getBancasList('sa sports')
         self.linksK = self.database.getBancasList('kbets')
         self.linksBolinha = self.database.getBancasList('bolinha')
-        #self.bancaListLink = None
-        #self.listLinkOdds  = None
+        self.bancaListLink = None
+        self.listLinkOdds  = None
 
     def ScrapingLinksKbets(self):
         for k in self.linksK:
