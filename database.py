@@ -46,4 +46,20 @@ class Database():
         result = collection.find({"rastrear": True, "sistema": sistema},{"_id":0,"url":1})
         result = list(map( lambda x : x['url'] , result))
         return result
+    def getBancasListComplet(self, sistema):
+        collection = self.databaseM['banca']
+        result = collection.find({ "sistema": sistema, "imagem": []},{"_id":1,"url":1,"banca":1})
+        return list(result)
+    def setImageInBanca(self,id,url_base,size):
+        collection = self.databaseM['banca']
+        result = collection.update_one({"_id": id}, { 
+            "$push": {
+                "imagem": { 
+                    "size": size,
+                    "url": url_base+"/"+size+"/"+str(id)+".png"
+                    }
+                }
+            }
+        )
+        print(result)
 
