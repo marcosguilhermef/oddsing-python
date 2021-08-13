@@ -27,7 +27,7 @@ def salvarOriginal(link,id,img,banca,imgBruto):
         f = open(PATH+banca+"/"+str(id)+'.png','wb')
         f.write(imgBruto)
         f.close()
-        DATABASE.setImageInBanca(id,URL_BASE,'original')
+        DATABASE.setImageInBanca(id,URL_BASE,'original',banca)
     except FileNotFoundError:
         os.mkdir(PATH+banca)
         salvarOriginal(link,id,img,banca,imgBruto)
@@ -36,7 +36,7 @@ def salvar50por50(link,id,img,banca,imgBruto):
     try:
         imgBrutoResize = Image.open(io.BytesIO(imgBruto)).resize((50,50))
         imgBrutoResize.save(PATH+banca+"/50x50/"+str(id)+'.png')
-        DATABASE.setImageInBanca(id,URL_BASE,'50x50')
+        DATABASE.setImageInBanca(id,URL_BASE,'50x50',banca)
     except FileNotFoundError:
         os.mkdir(PATH+banca+"/50x50/")
         salvar50por50(link,id,img,banca,imgBruto)

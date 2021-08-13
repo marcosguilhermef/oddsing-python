@@ -50,13 +50,13 @@ class Database():
         collection = self.databaseM['banca']
         result = collection.find({ "sistema": sistema, "imagem": []},{"_id":1,"url":1,"banca":1})
         return list(result)
-    def setImageInBanca(self,id,url_base,size):
+    def setImageInBanca(self,id,url_base,size,banca):
         collection = self.databaseM['banca']
         result = collection.update_one({"_id": id}, { 
             "$push": {
                 "imagem": { 
                     "size": size,
-                    "url": url_base+"/"+size+"/"+str(id)+".png"
+                    "url": url_base+"/"+banca+"/"+size+"/"+str(id)+".png"
                     }
                 }
             }
