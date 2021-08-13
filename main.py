@@ -19,17 +19,15 @@ import logging
 
 import concurrent.futures
 
-THREADS_N = 4
+THREADS_N = 8
 class CarregamentoDeLinks():
     def __init__(self):
         self.database =  Database()
-        self.links = self.database.getBancasList('sa sports')
-        self.linksK = self.database.getBancasList('kbets')
-        self.linksBolinha = self.database.getBancasList('bolinha')
         self.bancaListLink = None
         self.listLinkOdds  = None
 
     def ScrapingLinksKbets(self):
+        self.linksK = self.database.getBancasList('kbets')
         for k in self.linksK:
             self.scrapingCompletoKbets(k)
 
@@ -41,17 +39,13 @@ class CarregamentoDeLinks():
         except:
             traceback.print_exc()   
     
-    """ def scrapingOddsKbets(self,instance):
-        for item in instance.getAllId():
-            result = scrapkbetsodds(item['link'], casa=item['gameItem'][0]['tc'], fora=item['gameItem'][0]['tf'],dateMatch=item['date_match']).Start()
-            self.salve(result) """
     def scrapingOddsKbets(self,item):
         print('thread: ',threading.get_ident())
         result = scrapkbetsodds(item['link'], casa=item['gameItem'][0]['tc'], fora=item['gameItem'][0]['tf'],dateMatch=item['date_match']).Start()
         self.salve(result)
 
     def ScrapingOddSA(self):
-        links = self.links
+        links = self.database.getBancasList('sa sports')
         for link in links:
             self.RaspagemCompletaLinkSA(link)
 
@@ -80,6 +74,7 @@ class CarregamentoDeLinks():
             traceback.print_exc()    
 
     def ScrapingOddsBolinha(self):
+        self.linksBolinha = self.database.getBancasList('bolinha')
         for i in self.linksBolinha:
             self.RasparOddsBolinhas(i)
 
