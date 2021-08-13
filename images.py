@@ -24,7 +24,7 @@ PATH="imagens/"
 URL_BASE="localhost/origin/imagem"
 def salvarOriginal(link,id,img,banca,imgBruto):
     try:
-        f = open(PATH+banca+"/"+str(id)+'.png','wb')
+        f = open(PATH+banca+"/original/"+str(id)+'.png','wb')
         f.write(imgBruto)
         f.close()
         DATABASE.setImageInBanca(id,URL_BASE,'original',banca)
