@@ -7,6 +7,7 @@ from database import Database
 import os
 from PIL import Image
 import io
+import re
 
 class conectar:
     def __init__(self,link):
@@ -15,13 +16,18 @@ class conectar:
         try:
             r = requests.get('https://'+self.link)
             return r
-        except:
-            pass
+        except requests.exceptions.SSLError:
+            r = requests.get('http://'+self.link)
+            return r
 
 DATABASE = Database()
 
-PATH="imagens/"
-URL_BASE="localhost/origin/imagem"
+#PATH="imagens/"
+#URL_BASE="localhost/origin/imagem"
+
+PATH="/home/origin/www/oddsing/laravelOddsing/storage/app/bancas/"
+URL_BASE="https://oddsing.xyz/bancas"
+
 def salvarOriginal(link,id,img,banca,imgBruto):
     try:
         imgBrutoResize = Image.open(io.BytesIO(imgBruto))
@@ -44,10 +50,7 @@ def salvar50por50(link,id,img,banca,imgBruto):
         os.mkdir(PATH+banca+"/50x50/")
         salvar50por50(link,id,img,banca,imgBruto)
 
-
-  
-   
-myresult = [{"_id":"60e464eb29bbaf27ded27cd3","banca":"bbsports","url":"bbsports.top","sistema":"sa sports","instagram":[],"telefone":[],"localizacao":[],"imagem":[],"rastrear":False,"visivel":True,"whatsapp":[]}]
+myresult = DATABASE.getBancasListComplet('sa sports')
 for x in myresult:
   site = conectar(x['url']).iniciar()
   try:
@@ -63,9 +66,26 @@ for x in myresult:
         salvar50por50(x['url'],x['_id'],img[0]['src'],x['banca'],imgBruto)
   except:
     print('ERRO NO LINK ABAIXO '+x['url'])
+    traceback.print_exc() 
+
+myresult = DATABASE.getBancasListComplet('kbets')
+
+for x in myresult:
+  site = conectar(x['url']).iniciar()
+  try:
+    soup = BeautifulSoup(site.content, 'html.parser')
+    img = soup.find_all('link',limit=False)
+    imgLink = img[0]['href']
+    imgLink = re.sub('(https://)|(http://)','',imgLink)
+    imgBruto = conectar(imgLink).iniciar().content
+    try:
+        salvarOriginal(x['url'],x['_id'],'',x['banca'],imgBruto)
+        salvar50por50(x['url'],x['_id'],'',x['banca'],imgBruto)
+    except FileNotFoundError:
+        os.mkdir(PATH)
+        salvarOriginal(x['url'],x['_id'],'',x['banca'],imgBruto)
+        salvar50por50(x['url'],x['_id'],'',x['banca'],imgBruto)
+  except:
+    print('ERRO NO LINK ABAIXO '+x['url'])
     traceback.print_exc()
 
-
-
-PATH="/home/origin/www/oddsing/laravelOddsing/storage/app/bancas/"
-URL_BASE="https://oddsing.xyz/bancas"
