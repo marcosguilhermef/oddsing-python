@@ -24,18 +24,25 @@ PATH="imagens/"
 URL_BASE="localhost/origin/imagem"
 def salvarOriginal(link,id,img,banca,imgBruto):
     try:
-        f = open(PATH+banca+"/original/"+str(id)+'.png','wb')
-        f.write(imgBruto)
-        f.close()
+        imgBrutoResize = Image.open(io.BytesIO(imgBruto))
+        try:
+            imgBrutoResize.save(PATH+banca+"/original/"+str(id)+'.png')
+        except FileNotFoundError:
+            os.mkdir(PATH+banca)
+            imgBrutoResize.save(PATH+banca+"/original/"+str(id)+'.png')
         DATABASE.setImageInBanca(id,URL_BASE,'original',banca)
     except FileNotFoundError:
-        os.mkdir(PATH+banca)
+        os.mkdir(PATH+banca+"/original/")
         salvarOriginal(link,id,img,banca,imgBruto)
 
 def salvar50por50(link,id,img,banca,imgBruto):
     try:
         imgBrutoResize = Image.open(io.BytesIO(imgBruto)).resize((50,50))
-        imgBrutoResize.save(PATH+banca+"/50x50/"+str(id)+'.png')
+        try:
+            imgBrutoResize.save(PATH+banca+"/50x50/"+str(id)+'.png')
+        except FileNotFoundError:
+            os.mkdir(PATH+banca)
+            imgBrutoResize.save(PATH+banca+"/50x50/"+str(id)+'.png')
         DATABASE.setImageInBanca(id,URL_BASE,'50x50',banca)
     except FileNotFoundError:
         os.mkdir(PATH+banca+"/50x50/")
@@ -44,7 +51,7 @@ def salvar50por50(link,id,img,banca,imgBruto):
 
   
    
-myresult = DATABASE.getBancasListComplet('sa sports')
+myresult = [{"_id":"60e464eb29bbaf27ded27cd3","banca":"bbsports","url":"bbsports.top","sistema":"sa sports","instagram":[],"telefone":[],"localizacao":[],"imagem":[],"rastrear":False,"visivel":True,"whatsapp":[]}]
 for x in myresult:
   site = conectar(x['url']).iniciar()
   try:
@@ -64,3 +71,5 @@ for x in myresult:
 
 
 
+PATH="/home/origin/www/oddsing/laravelOddsing/storage/app/bancas/"
+URL_BASE="https://oddsing.xyz/bancas"
