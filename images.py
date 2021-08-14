@@ -19,6 +19,8 @@ class conectar:
         except requests.exceptions.SSLError:
             r = requests.get('http://'+self.link)
             return r
+        except:
+            pass
 
 DATABASE = Database()
 
