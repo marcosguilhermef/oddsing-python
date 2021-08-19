@@ -8,6 +8,7 @@ import os
 from PIL import Image
 import io
 import re
+from bson.objectid import ObjectId
 
 class conectar:
     def __init__(self,link):
@@ -24,11 +25,11 @@ class conectar:
 
 DATABASE = Database()
 
-#PATH="imagens/"
-#URL_BASE="localhost/origin/imagem"
+PATH="imagens/"
+URL_BASE="localhost/origin/imagem"
 
-PATH="/home/origin/www/oddsing/laravelOddsing/storage/app/bancas/"
-URL_BASE="https://oddsing.xyz/bancas"
+#PATH="/home/origin/www/oddsing/laravelOddsing/storage/app/bancas/"
+#URL_BASE="https://oddsing.xyz/bancas"
 
 def salvarOriginal(link,id,img,banca,imgBruto):
     try:
@@ -69,7 +70,7 @@ for x in myresult:
   except:
     print('ERRO NO LINK ABAIXO '+x['url'])
     traceback.print_exc() 
-
+ 
 myresult = DATABASE.getBancasListComplet('kbets')
 
 for x in myresult:
@@ -89,5 +90,5 @@ for x in myresult:
         salvar50por50(x['url'],x['_id'],'',x['banca'],imgBruto)
   except:
     print('ERRO NO LINK ABAIXO '+x['url'])
-    traceback.print_exc()
+    pass
 

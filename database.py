@@ -48,7 +48,7 @@ class Database():
         return result
     def getBancasListComplet(self, sistema):
         collection = self.databaseM['banca']
-        result = collection.find({ "sistema": sistema, "imagem": []},{"_id":1,"url":1,"banca":1})
+        result = collection.find({ "sistema": sistema, "imagem": {"$size" : 0}},{"_id":1,"url":1,"banca":1})
         return list(result)
     def setImageInBanca(self,id,url_base,size,banca):
         collection = self.databaseM['banca']
@@ -61,5 +61,5 @@ class Database():
                 }
             }
         )
-        print(result)
+        print(result.modified_count)
 
