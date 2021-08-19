@@ -69,7 +69,7 @@ for x in myresult:
         salvar50por50(x['url'],x['_id'],img[0]['src'],x['banca'],imgBruto)
   except:
     print('ERRO NO LINK ABAIXO '+x['url'])
-    traceback.print_exc() 
+    pass 
  
 myresult = DATABASE.getBancasListComplet('kbets')
 
