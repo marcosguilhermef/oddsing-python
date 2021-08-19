@@ -55,8 +55,8 @@ def salvar50por50(link,id,img,banca,imgBruto):
 
 myresult = DATABASE.getBancasListComplet('sa sports')
 for x in myresult:
-  site = conectar(x['url']).iniciar()
   try:
+    site = conectar(x['url']).iniciar()
     soup = BeautifulSoup(site.content, 'html.parser')
     img = soup.find_all('img',limit=False)
     imgBruto = conectar(x['url']+"/"+img[0]['src']).iniciar().content
@@ -68,14 +68,14 @@ for x in myresult:
         salvarOriginal(x['url'],x['_id'],img[0]['src'],x['banca'],imgBruto)
         salvar50por50(x['url'],x['_id'],img[0]['src'],x['banca'],imgBruto)
   except:
-    print('ERRO NO LINK ABAIXO '+x['url'])
+    print('ERRO NO LINK ABAIXO SA SPORTS'+x['url'])
     pass 
  
 myresult = DATABASE.getBancasListComplet('kbets')
 
 for x in myresult:
-  site = conectar(x['url']).iniciar()
   try:
+    site = conectar(x['url']).iniciar()
     soup = BeautifulSoup(site.content, 'html.parser')
     img = soup.find_all('link',limit=False)
     imgLink = img[0]['href']
@@ -89,6 +89,6 @@ for x in myresult:
         salvarOriginal(x['url'],x['_id'],'',x['banca'],imgBruto)
         salvar50por50(x['url'],x['_id'],'',x['banca'],imgBruto)
   except:
-    print('ERRO NO LINK ABAIXO '+x['url'])
+    print('ERRO NO LINK ABAIXO KBETS'+x['url'])
     pass
 
