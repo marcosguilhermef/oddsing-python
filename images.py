@@ -68,7 +68,7 @@ for x in myresult:
         salvarOriginal(x['url'],x['_id'],img[0]['src'],x['banca'],imgBruto)
         salvar50por50(x['url'],x['_id'],img[0]['src'],x['banca'],imgBruto)
   except:
-    print('ERRO NO LINK ABAIXO SA SPORTS'+x['url'])
+    print('ERRO NO LINK ABAIXO SA SPORTS '+x['url'])
     pass 
  
 myresult = DATABASE.getBancasListComplet('kbets')
@@ -89,6 +89,6 @@ for x in myresult:
         salvarOriginal(x['url'],x['_id'],'',x['banca'],imgBruto)
         salvar50por50(x['url'],x['_id'],'',x['banca'],imgBruto)
   except:
-    print('ERRO NO LINK ABAIXO KBETS'+x['url'])
+    print('ERRO NO LINK ABAIXO KBETS '+x['url'])
     pass
 

@@ -40,8 +40,9 @@ class CarregamentoDeLinks():
             traceback.print_exc()   
     
     def scrapingOddsKbets(self,item):
-        print('thread: ',threading.get_ident())
+        #print('thread: ',threading.get_ident())
         result = scrapkbetsodds(item['link'], casa=item['gameItem'][0]['tc'], fora=item['gameItem'][0]['tf'],dateMatch=item['date_match']).Start()
+        print(result)
         self.salve(result)
 
     def ScrapingOddSA(self):
@@ -96,7 +97,7 @@ class CarregamentoDeLinks():
         self.database.insertMongo(body)
 
 a = CarregamentoDeLinks()
-data = Database()
+
 
 while True:
     a.ScrapingOddSA()

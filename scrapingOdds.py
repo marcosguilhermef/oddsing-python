@@ -1,3 +1,4 @@
+import traceback
 from warnings import catch_warnings, simplefilter
 import connect
 from bs4 import BeautifulSoup
@@ -6,6 +7,8 @@ import json
 import datetime
 import database
 from OddParametrizacao import bolinhaParaSa
+from OddParametrizacao import kbetsParaSa
+
 from difflib import SequenceMatcher
 
 class RaparOddsSa():
@@ -93,7 +96,7 @@ class rasparDadosKbets():
         self.setHora()
         self.setStats()
         self.setCasaFora()
-        self.setOdds()
+        self.oddsJSON['odds'] = self.setOdds()
         return self.oddsJSON
     def setBanca(self):
         self.oddsJSON['banca'] = re.search('\w{1,}', self.link).group(0)
@@ -131,8 +134,19 @@ class rasparDadosKbets():
             print('ratio: ',SequenceMatcher(None,foraResult,fora).ratio()," fora: "+foraResult," fora2: ", fora)
         return { "casa": casaResult, "fora": foraResult }
 
-    def setOdds(self):
-        self.oddsJSON['odds'] = list(map( lambda x : { "tipo": x["grupo"], "Taxa": float(x["taxa"]), "nome": x["odds"] } , self.body))
+    def setOdds(self): 
+        self.oddsJSON['odds'] = []
+        for x in self.body:
+            try:
+                compatibilizar = kbetsParaSa(x["grupo_id"],x['odds'],x['grupo'])
+                grupo = compatibilizar.getGrupoOdd()
+                oddsNome = compatibilizar.getName()
+                odd = { "tipo": grupo, "Taxa": float(x["taxa"]), "nome": oddsNome }
+                self.oddsJSON['odds'].append(odd)
+            except:
+                traceback.print_exc()
+                exit()
+        return self.oddsJSON['odds']
 
 class ScrapingOddsBolinha():
     def __init__(self,link, date_match,tCasa = '',tFora = '',campeonato = ''):
