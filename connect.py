@@ -71,9 +71,13 @@ class ConectBolinha():
             return r
         except requests.exceptions.ConnectionError:
             try:
-                proxies = {
+                """ proxies = {
                     "http": "http://lum-customer-hl_6fcc0e29-zone-static-route_err-pass_dyn-country-br:1art1pt9d8mi@zproxy.lum-superproxy.io:22225",
                     "https": "http://lum-customer-hl_6fcc0e29-zone-static-route_err-pass_dyn-country-br:1art1pt9d8mi@zproxy.lum-superproxy.io:22225",
+                } """
+                proxies = {
+                    "http": "socks4://191.7.215.246:5678",
+                    "https": "socks4://191.7.215.246:5678",
                 }
                 print('http://'+self.link)
                 r = requests.get('https://'+self.link, proxies=proxies)

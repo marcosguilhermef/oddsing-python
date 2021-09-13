@@ -9,6 +9,7 @@ from PIL import Image
 import io
 import re
 from bson.objectid import ObjectId
+import traceback;
 
 class conectar:
     def __init__(self,link):
@@ -53,7 +54,7 @@ def salvar50por50(link,id,img,banca,imgBruto):
         os.mkdir(PATH+banca+"/50x50/")
         salvar50por50(link,id,img,banca,imgBruto)
 
-myresult = DATABASE.getBancasListComplet('sa sports')
+"""myresult = DATABASE.getBancasListComplet('sa sports')
 for x in myresult:
   try:
     site = conectar(x['url']).iniciar()
@@ -69,7 +70,7 @@ for x in myresult:
         salvar50por50(x['url'],x['_id'],img[0]['src'],x['banca'],imgBruto)
   except:
     print('ERRO NO LINK ABAIXO SA SPORTS '+x['url'])
-    pass 
+    pass """
  
 myresult = DATABASE.getBancasListComplet('kbets')
 
@@ -79,7 +80,8 @@ for x in myresult:
     soup = BeautifulSoup(site.content, 'html.parser')
     img = soup.find_all('link',limit=False)
     imgLink = img[0]['href']
-    imgLink = re.sub('(https://)|(http://)','',imgLink)
+    imgLink = re.sub('//','',imgLink)
+    print("-----> ",imgLink)
     imgBruto = conectar(imgLink).iniciar().content
     try:
         salvarOriginal(x['url'],x['_id'],'',x['banca'],imgBruto)
@@ -89,6 +91,7 @@ for x in myresult:
         salvarOriginal(x['url'],x['_id'],'',x['banca'],imgBruto)
         salvar50por50(x['url'],x['_id'],'',x['banca'],imgBruto)
   except:
-    print('ERRO NO LINK ABAIXO KBETS '+x['url'])
+    print(x)
+    traceback.print_exc()
     pass
 
